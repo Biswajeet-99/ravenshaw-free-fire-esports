@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101510">
+  <meta name="description" content="Ravenshaw Free Fire Esports — squad registration, match scoring and live tournament standings.">
+  <title>Ravenshaw Esports — Tournament Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <div class="page-noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Ravenshaw Esports home"><span class="brand-mark">R</span><span>RAVENSHAW <b>ESPORTS</b></span></a>
+    <span class="season-tag"><i></i> FREE FIRE · TOURNAMENT</span>
+  </header>
+  <main class="shell" id="home">
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">RAVENSHAW UNIVERSITY · BATTLE ARENA</p><h1>THE CAMPUS<br><span>CHAMPIONSHIP</span></h1><p class="hero-sub">Twelve squads. Five matches. One champion.</p></div>
+      <div class="hero-stats"><div><strong>12</strong><span>SQUAD SLOTS</span></div><div><strong>05</strong><span>MATCHES</span></div><div><strong>LIVE</strong><span>STANDINGS</span></div></div>
+    </section>
+    <nav class="tabs" role="tablist" aria-label="Tournament sections">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="leaderboard"><span>01</span> Live Leaderboard</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="register"><span>02</span> Squad Registration</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="scores"><span>03</span> Score Entry <small>M1–M5</small></button>
+    </nav>
+    <section class="panel active" id="panel-leaderboard" role="tabpanel">
+      <div class="section-heading"><div><p class="eyebrow">THE RACE TO THE TOP</p><h2>LIVE STANDINGS</h2></div><div class="heading-actions"><span class="updated" id="updated-label">Connecting…</span><button class="button button-quiet" id="refresh-button" type="button"><span class="refresh-icon">↻</span> Refresh standings</button></div></div>
+      <div class="leaderboard-wrap"><table class="leaderboard"><thead><tr><th>RANK</th><th>SQUAD</th><th>BOOYAH</th><th>KILLS</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>POINTS</th></tr></thead><tbody id="leaderboard-body"><tr><td colspan="10" class="loading-cell"><span class="spinner"></span> Loading live standings…</td></tr></tbody></table></div>
+      <div class="legend"><span><b>12</b> Placement points for Booyah</span><span><b>+1</b> Point per kill</span><span>Auto-refreshes every 30 seconds</span></div>
+    </section>
+    <section class="panel" id="panel-register" role="tabpanel" hidden>
+      <div class="section-heading"><div><p class="eyebrow">CLAIM YOUR PLACE</p><h2>REGISTER YOUR SQUAD</h2></div><span class="section-note">12 slots available · First come, first served</span></div>
+      <form id="registration-form" class="form-card">
+        <div class="form-grid">
+          <label class="field">OPEN SLOT<select name="slot" id="slot-select" required><option value="">Loading open slots…</option></select></label>
+          <label class="field">SQUAD NAME<input name="team_name" maxlength="120" required placeholder="Your team name"></label>
+          <label class="field">CAPTAIN NAME<input name="captain_name" maxlength="120" required placeholder="Captain's name"></label>
+          <label class="field">DEPARTMENT<input name="department" maxlength="120" required placeholder="Department / year"></label>
+          <label class="field">WHATSAPP CONTACT<input name="whatsapp" maxlength="120" required placeholder="+91 …"></label>
+          <label class="field">PLAYER 1<input name="player1" maxlength="120" required placeholder="In-game name / UID"></label>
+          <label class="field">PLAYER 2<input name="player2" maxlength="120" required placeholder="In-game name / UID"></label>
+          <label class="field">PLAYER 3<input name="player3" maxlength="120" required placeholder="In-game name / UID"></label>
+          <label class="field">PLAYER 4<input name="player4" maxlength="120" required placeholder="In-game name / UID"></label>
+          <label class="field">SUBSTITUTE <span class="optional">OPTIONAL</span><input name="substitute" maxlength="120" placeholder="In-game name / UID"></label>
+        </div>
+        <div class="form-footer"><p>Your slot is reserved once registration is confirmed.</p><button class="button button-primary" type="submit">Register squad <span>→</span></button></div>
+      </form>
+    </section>
+    <section class="panel" id="panel-scores" role="tabpanel" hidden>
+      <div class="section-heading"><div><p class="eyebrow">ORGANIZER CONSOLE</p><h2>MATCH SCORE ENTRY</h2></div><button class="button button-quiet" id="organizer-login" type="button">♙ <span id="organizer-label">Organizer login (PIN)</span></button></div>
+      <div class="notice"><span class="notice-icon">i</span><p>Scores are protected. Sign in with your organizer PIN to edit placements and kills. Players can still view live standings and register squads.</p></div>
+      <div id="score-content" class="score-content"><div class="score-lock"><span class="lock-icon">⌑</span><h3>Organizer access required</h3><p>Unlock score entry to update results for Matches 1–5.</p><button class="button button-primary" type="button" id="unlock-button">Enter organizer PIN</button></div></div>
+    </section>
+    <footer><span>RAVENSHAW ESPORTS <b>·</b> PLAY FAIR. PLAY TO WIN.</span><span>Official tournament standings</span></footer>
+  </main>
+  <dialog id="pin-dialog" class="modal"><form method="dialog" class="modal-card" id="pin-form"><button class="modal-close" aria-label="Close" value="cancel" type="submit">×</button><p class="eyebrow">ORGANIZER ACCESS</p><h2>UNLOCK SCORE ENTRY</h2><p>Enter the tournament organizer PIN to manage match results.</p><label class="field">ADMIN PIN<input id="pin-input" type="password" autocomplete="current-password" required></label><div class="modal-actions"><button class="button button-quiet" value="cancel" type="submit">Cancel</button><button class="button button-primary" value="default" type="submit">Unlock</button></div></form></dialog>
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
