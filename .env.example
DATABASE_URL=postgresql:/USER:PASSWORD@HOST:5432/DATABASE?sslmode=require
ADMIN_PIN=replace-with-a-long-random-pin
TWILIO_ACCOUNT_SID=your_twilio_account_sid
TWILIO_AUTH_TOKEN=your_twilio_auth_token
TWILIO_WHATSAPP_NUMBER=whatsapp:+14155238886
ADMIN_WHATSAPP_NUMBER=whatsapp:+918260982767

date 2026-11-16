@@ -1,0 +1,13 @@
+{
+  "name": "ravenshaw-free-fire-esports",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Squad registration and persistent live leaderboard for Ravenshaw Free Fire Esports.",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pg": "^8.13.1",
+    "twilio": "^5.3.0"
+  }
+}
