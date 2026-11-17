@@ -13,9 +13,11 @@ function buildLeaderboard(squads, scores) {
       points: placementPoints[Number(score.placement) - 1] + Number(score.kills)
     });
   }
+
   return squads.map((squad) => {
     const matchScores = scoreMap.get(squad.slot) || [];
     const placements = new Map(matchScores.map((item) => [item.match_number, item.placement]));
+
     return {
       ...squad,
       scores: Array.from({ length: 5 }, (_, i) => matchScores.find((item) => item.match_number === i + 1) || null),
@@ -32,18 +34,23 @@ module.exports = async function handler(req, res) {
     res.setHeader('Allow', 'GET');
     return res.status(405).json({ error: 'Method not allowed.' });
   }
+
   try {
     const db = getPool();
     const [squadResult, scoreResult] = await Promise.all([
-      db.query('SELECT slot, team_name, captain_name, department, whatsapp, player1, player2, player3, player4, substitute, created_at FROM squads ORDER BY slot'),
-      db.query('SELECT slot, match_number, placement, kills, updated_at FROM match_scores ORDER BY slot, match_number')
+      db.execute('SELECT slot, team_name, captain_name, department, whatsapp, player1, player2, player3, player4, substitute, created_at FROM squads ORDER BY slot'),
+      db.execute('SELECT slot, match_number, placement, kills, updated_at FROM match_scores ORDER BY slot, match_number')
     ]);
-    const squadBySlot = new Map(squadResult.rows.map((squad) => [Number(squad.slot), squad]));
+
+    const squads = squadResult[0];
+    const scores = scoreResult[0];
+    const squadBySlot = new Map(squads.map((squad) => [Number(squad.slot), squad]));
     const slots = Array.from({ length: 12 }, (_, i) => squadBySlot.get(i + 1) || {
       slot: i + 1, team_name: null, captain_name: null, department: null, whatsapp: null,
       player1: null, player2: null, player3: null, player4: null, substitute: null, created_at: null
     });
-    return res.status(200).json({ squads: slots, leaderboard: buildLeaderboard(slots, scoreResult.rows), updated_at: new Date().toISOString() });
+
+    return res.status(200).json({ squads: slots, leaderboard: buildLeaderboard(slots, scores), updated_at: new Date().toISOString() });
   } catch (error) {
     console.error('GET /api/tournament:', error);
     return res.status(error.statusCode || 500).json({ error: error.statusCode ? error.message : 'Unable to load tournament data. Check the database connection and schema.' });
